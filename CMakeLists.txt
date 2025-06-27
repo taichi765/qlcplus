@@ -3,6 +3,22 @@ project(qlcplus VERSION 4.14.2 LANGUAGES C CXX)
 
 option(qmlui "Build for QLC+ 5 QML UI" OFF)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    option(USE_ASAN "Enable AddressSanitizer" OFF)
+    if(USE_ASAN)
+        add_compile_options(-fsanitize=address -g -O1)
+        add_link_options(-fsanitize=address)
+        message("Building with ASan")
+    endif()
+
+    option(USE_UBSAN "Enable UndefindBehaviorSanitizer" OFF)
+    if(USE_UBSAN)
+        add_compile_options(-fsanitize=undefined -g -O1)
+        add_link_options(-fsanitize=undefined)
+        message("Building with UBSan")
+    endif()
+endif()
+
 # Set Release build type by default
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
